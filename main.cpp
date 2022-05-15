@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+
 using std::cout;
 using std::endl;
 using std::cerr;
@@ -8,11 +9,12 @@ using std::stringstream ;
 using std::string;
 using std::ostream;
 
+
 unsigned long long int Fibonacci(unsigned int n);
 void PrintReverseString(const string& str, ostream& output = cout);
 // You may change the parameters of these functions
-size_t MinimumPosition(const int array[], size_t size);
-void SelectionSort(int array[], size_t size);
+size_t MinimumPosition(const int array[], size_t size, size_t pos);
+void SelectionSort(int array[], size_t size, size_t minPos);
 
 
 int main() {
@@ -49,7 +51,7 @@ int main() {
 
 	cout << "Testing Minimum Position Finding" << endl;
 	for (int i = 0; i < TESTS; ++i) {
-		minimumResponses[i] = MinimumPosition(data[i], ELEMENTS);
+		minimumResponses[i] = MinimumPosition(data[i], ELEMENTS, 0);
 		if (minimumResponses[i] == minimumSolutions[i]){
 			cout << "\tPassed " << ++passed << " tests" << endl;
 		}
@@ -57,7 +59,7 @@ int main() {
 	cout << "Testing Sorting" << endl;
 	bool equal;
 	for (int i = 0; i < TESTS; ++i) {
-		SelectionSort(data[i], ELEMENTS);
+		SelectionSort(data[i], ELEMENTS, 0);
 		equal = true;
 		for (int j = 0; j < ELEMENTS; ++j) {
 			if (data[i][j] != sortedArrays[i][j]){
@@ -85,14 +87,59 @@ int main() {
 }
 
 unsigned long long int Fibonacci(unsigned int n){
-	return 0;
+    // base case
+    if(n == 0 || n == 1) {
+        return n;
+    }
+
+    // recursive case
+    return Fibonacci(n - 1) + Fibonacci(n - 2);
 }
+
 void PrintReverseString(const string& str, ostream& output){
+    // base case
+    // if the string is empty, stop the recurison
+    if(str.empty()) {
+        return;
+    }else{
+        // recursive case
+        // move the string up by 1 and output the first char of the current string
+        output << str[str.size() - 1];
+        PrintReverseString(str.substr(0, str.size() - 1));
+    }
+
 }
+
 // You may change the parameters of these functions
-size_t MinimumPosition(const int array[], size_t size){
-	return 0;
+size_t MinimumPosition(const int array[], size_t size, size_t pos){
+	// base case
+    if(size == 0) {
+        return pos;
+    }else{
+        // recursive case
+        if(array[size] < array[size - 1]) {
+            pos = size;
+        }
+
+        return MinimumPosition(array, size - 1, pos);
+    }
+
 }
-void SelectionSort(int array[], size_t size){
+
+void SelectionSort(int array[], size_t size, size_t minPos){
+    // base case
+    if(size == minPos) {
+        return;
+    }else{
+        // recursive case
+        size_t min = array[minPos];
+        size_t max = array[size - 1];
+        if(max < min) {
+            array[minPos] = max;
+            array[size - 1] = min;
+        }
+
+        SelectionSort(array, size - 1, minPos + 1);
+    }
 
 }
